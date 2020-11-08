@@ -41,7 +41,7 @@ rr_result *rr(int *queue, int np, int tq)
 		(result->order)[count] = count + 1;
 	}
 
-	int count, time, remain, tat, wt,marker;
+	int count, time, remain, tat, wt, marker;
 	count = 0;
 	time = 0;
 	remain = np;
@@ -52,10 +52,25 @@ rr_result *rr(int *queue, int np, int tq)
 		if(remainTime[count] <= tq && remainTime[count] > 0){
 			remainTime[count] = 0;
 			marker = 1;
-			time += remainTime[count]
+			time += remainTime[count];
+		}else if(remainTime[count] > 0){
+			remainTime[count] -= tq;
+			time += tq;
 		}
-
-
+		if (remainTime[count] == 0 && marker == 1){
+			remain--;
+			(result->turnarounds)[count] = (time - (result->order)[count] - 1) - (time - (result->order)[count] -1 - queue[count]);
+			wt += time - (result->order)[count] - 1 - queue[count];
+			tat += time += time - (result->order)[count] - 1;
+			marker = 0;
+		}
+		if(count == (np-1)){
+			count = 0;
+		}else if(((result->order)[count+1]-1)<=time){
+			count++;
+		}else{
+			count=0;
+		}
 	}
 
 	return result;
